@@ -1,5 +1,5 @@
 from pathlib import Path
-
+import torch
 # -----------------------
 # Project Paths
 # -----------------------
@@ -46,4 +46,4 @@ NUM_WORKERS = 0
 # Device
 # -----------------------
 
-DEVICE = "cpu"
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
