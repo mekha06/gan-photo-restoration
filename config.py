@@ -22,7 +22,7 @@ RESULTS_DIR = OUTPUT_DIR / "results"
 # Image Parameters
 # -----------------------
 
-IMAGE_SIZE = 128
+IMAGE_SIZE = 256
 
 CHANNELS = 3
 
