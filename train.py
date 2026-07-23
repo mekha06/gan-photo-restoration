@@ -19,11 +19,12 @@ from dataset.dataset import PhotoRestorationDataset
 from models.generator import Generator
 from models.discriminator import Discriminator
 from losses.loss import Pix2PixLoss
-from utils.image_utils import save_image_grid
+from utils.metrics import ImageMetrics
 
 def train():
 
     CHECKPOINT_DIR.mkdir(parents=True, exist_ok=True)
+    SAMPLES_DIR.mkdir(parents=True, exist_ok=True)
     dataset = PhotoRestorationDataset()
 
     dataloader = DataLoader(
@@ -49,6 +50,7 @@ def train():
     )
 
     criterion = Pix2PixLoss(DEVICE)
+    metrics = ImageMetrics(DEVICE)
 
     for epoch in range(NUM_EPOCHS):
 
@@ -103,6 +105,10 @@ def train():
         avg_g = total_g / len(dataloader)
 
         avg_d = total_d / len(dataloader)
+        psnr, ssim = metrics.calculate(
+         fake,
+         clean
+)
         save_image_grid(
           damaged,
           fake,
@@ -115,6 +121,8 @@ def train():
             f"Epoch [{epoch+1}/{NUM_EPOCHS}] "
             f"G Loss: {avg_g:.4f} "
             f"D Loss: {avg_d:.4f}"
+            f"PSNR: {psnr:.2f} "
+            f"SSIM: {ssim:.4f}"
         )
 
         save_checkpoint(
