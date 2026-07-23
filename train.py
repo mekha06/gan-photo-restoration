@@ -3,6 +3,7 @@ import torch
 from torch.utils.data import DataLoader
 from torch.optim import Adam
 from utils.checkpoint import save_checkpoint
+from utils.image_utils import save_image_grid
 
 from config import (
     DEVICE,
@@ -11,14 +12,14 @@ from config import (
     LEARNING_RATE,
     BETA1,
     BETA2,
-    CHECKPOINT_DIR
+    CHECKPOINT_DIR,
+    SAMPLES_DIR
 )
-
 from dataset.dataset import PhotoRestorationDataset
 from models.generator import Generator
 from models.discriminator import Discriminator
 from losses.loss import Pix2PixLoss
-
+from utils.image_utils import save_image_grid
 
 def train():
 
@@ -102,6 +103,13 @@ def train():
         avg_g = total_g / len(dataloader)
 
         avg_d = total_d / len(dataloader)
+        save_image_grid(
+          damaged,
+          fake,
+          clean,
+          epoch + 1,
+          SAMPLES_DIR
+)
 
         print(
             f"Epoch [{epoch+1}/{NUM_EPOCHS}] "
