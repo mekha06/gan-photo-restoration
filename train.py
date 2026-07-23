@@ -1,8 +1,8 @@
-import os
 
 import torch
 from torch.utils.data import DataLoader
 from torch.optim import Adam
+from utils.checkpoint import save_checkpoint
 
 from config import (
     DEVICE,
@@ -22,8 +22,7 @@ from losses.loss import Pix2PixLoss
 
 def train():
 
-    os.makedirs(CHECKPOINT_DIR, exist_ok=True)
-
+    CHECKPOINT_DIR.mkdir(parents=True, exist_ok=True)
     dataset = PhotoRestorationDataset()
 
     dataloader = DataLoader(
@@ -110,21 +109,14 @@ def train():
             f"D Loss: {avg_d:.4f}"
         )
 
-        torch.save(
-            generator.state_dict(),
-            os.path.join(
-                CHECKPOINT_DIR,
-                "generator_latest.pth"
-            )
-        )
-
-        torch.save(
-            discriminator.state_dict(),
-            os.path.join(
-                CHECKPOINT_DIR,
-                "discriminator_latest.pth"
-            )
-        )
+        save_checkpoint(
+    generator,
+    discriminator,
+    optimizer_g,
+    optimizer_d,
+    epoch + 1,
+    CHECKPOINT_DIR / "pix2pix_checkpoint.pth"
+)
 
     print("Training Completed")
 
